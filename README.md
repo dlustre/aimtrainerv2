@@ -1,4 +1,4 @@
-# React + Vite
+dlustre's Aim Trainer V2
 
 A simple game that has its own database to store the users' scores.
 
