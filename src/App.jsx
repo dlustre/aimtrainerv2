@@ -3,6 +3,7 @@ import useCountdown from './useCountdown.jsx'
 import Leaderboard from './Leaderboard.jsx'
 import { checkUserExists, createNewAccount, getBestScore, updateBestScore } from './firebaseUtils.jsx'
 import useColorChange from 'use-color-change';
+import logo from './filipinoStar.png'
 
 import './styles.css'
 
@@ -199,7 +200,7 @@ export default function App() {
       <div className="homeAnchor" title='More cool stuff!'>
         <a href="https://www.linkedin.com/in/dennis-lustre/">
           <div className="imageContainer">
-            <img className="homeImg" src="/assets/images/filipinoStar.png" alt="Mandala" />
+            <img className="homeImg" src={logo} alt="Star" />
           </div>
           <div className="nameContainer">
             dlustre
