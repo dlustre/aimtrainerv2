@@ -90,8 +90,3 @@ export const fetchAllUsers = async () => {
 
     return users;
 };
-
-// Call the function to fetch all users
-fetchAllUsers().then((users) => {
-    console.log(users); // Do something with the fetched users data
-});

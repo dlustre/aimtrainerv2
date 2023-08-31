@@ -199,7 +199,7 @@ export default function App() {
       <div className="homeAnchor" title='More cool stuff!'>
         <a href="https://www.linkedin.com/in/dennis-lustre/">
           <div className="imageContainer">
-            <img className="homeImg" src="assets/filipinoStar.png" alt="Mandala" />
+            <img className="homeImg" src="../assets/filipinoStar.png" alt="Mandala" />
           </div>
           <div className="nameContainer">
             dlustre
