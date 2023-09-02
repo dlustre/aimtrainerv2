@@ -10,7 +10,7 @@ export default function useCountdown(callback) {
         }
 
         const interval = setInterval(() => {
-            setCentiseconds(centiseconds - 1);
+            setCentiseconds(prevCentiseconds => prevCentiseconds - 1);
         }, 10); // Update every 10 milliseconds (1 centisecond)
 
         return () => clearInterval(interval);

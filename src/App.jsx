@@ -9,21 +9,25 @@ import './styles.css'
 
 
 export default function App() {
-  const startingPos = {
-    top: '50%',
-    left: '48.4%',
-  }
-  const [shouldFade, setShouldFade] = useState(false);
+
+  const startingSize = 65;
+  const [fetchedScore, setFetchedScore] = useState(null);
   const [isNewUser, setIsNewUser] = useState(false);
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [targetVisible, setTargetVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [bestSessionScore, setBestSessionScore] = useState(0);
-  const [bestScore, setBestScore] = useState(0);
   const [inProgress, setInProgress] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [btnColor, setBtnColor] = useState('#FF5733');
   const [userId, setUserId] = useState(null);
+  const [bestScore, setBestScore] = useState(0);
+  const { centiseconds, start } = useCountdown(handleEnd);
+
+  const startingPos = {
+    top: '50%',
+    left: '48.4%',
+  }
 
   const colorStyle = useColorChange(clickCount, {
     higher: '#a09dd4',
@@ -36,28 +40,27 @@ export default function App() {
     username: '',
   });
 
-
   function handleStart() {
     if (inProgress) {
       setInProgress(false);
-      toggleTarget();
+      toggleDisplay(targetVisible, setTargetVisible);
       start(0);
       setBtnPos({ ...startingPos })
     } else {
-      toggleTarget();
+      toggleDisplay(targetVisible, setTargetVisible);
       setInProgress(true);
       setClickCount(0);
       start(60);
     }
   }
 
-
   function handleEnd() {
     if (inProgress) {
       setInProgress(false);
       setBtnPos({ ...startingPos })
-      toggleModal();
-      toggleTarget();
+      toggleDisplay(targetVisible, setTargetVisible);
+      toggleDisplay(modalVisible, setModalVisible);
+
     }
   }
 
@@ -79,35 +82,36 @@ export default function App() {
     }
   }
 
-  const { centiseconds, start } = useCountdown(handleEnd);
 
   function handleTargetClick() {
     updateCounter();
-    if (!shouldFade) {
-
-      setShouldFade(true); // Set to true when click count is incremented
-      setTimeout(() => {
-        setShouldFade(false); // Set back to false after a delay
-      }, 500); // Adjust the delay as needed
-    }
     start(60);
     moveButton();
   }
 
   useEffect(() => {
     const fetchBestScore = async () => {
-      // Add a delay of 1 second
-      await new Promise(resolve => setTimeout(resolve, 1));
-
-      const fetchedScore = await getBestScore(userId);
-      if (fetchedScore > bestScore) {
-        setBestScore(fetchedScore);
-      }
+      const fetched = await getBestScore(userId);
+      console.log('end fetch: ' + fetched);
+      setFetchedScore(fetched);
     };
-    if (userId && !isNewUser) {
+
+    if (userId && !isNewUser && fetchedScore === null) {
+      console.log('begin fetch')
       fetchBestScore();
     }
-  }, [bestScore, isNewUser, userId]);
+  }, [isNewUser, userId, fetchedScore]);
+
+  useEffect(() => {
+    if (fetchedScore !== null) {
+      if (fetchedScore >= bestScore) {
+        console.log(`fetched score higher: ${fetchedScore}`)
+        setBestScore(fetchedScore);
+      } else {
+        updateBestScore(userId, bestScore);
+      }
+    }
+  }, [fetchedScore, bestScore, userId]);
 
   useEffect(() => {
     if (clickCount > bestSessionScore) {
@@ -120,13 +124,6 @@ export default function App() {
       setBestScore(bestSessionScore);
     }
   }, [bestScore, bestSessionScore]);
-
-  useEffect(() => {
-    if (userId) {
-      updateBestScore(userId, bestScore);
-    }
-  }, [bestScore, userId]);
-
 
   function updateCounter() {
     setClickCount((prevCount) => prevCount + 1)
@@ -149,16 +146,8 @@ export default function App() {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  function toggleTarget() {
-    setTargetVisible(!targetVisible);
-  }
-
-  function toggleModal() {
-    setModalVisible(!modalVisible);
-  }
-
-  function toggleLeaderboard() {
-    setLeaderboardVisible(!leaderboardVisible);
+  function toggleDisplay(state, setState) {
+    setState(!state);
   }
 
   function hasWhiteSpace(s) {
@@ -198,7 +187,7 @@ export default function App() {
       </div>
 
       <div className="homeAnchor" title='More cool stuff!'>
-        <a href="https://www.linkedin.com/in/dennis-lustre/">
+        <a href="https://github.com/dlustre">
           <div className="imageContainer">
             <img className="homeImg" src={logo} alt="Star" />
           </div>
@@ -210,7 +199,7 @@ export default function App() {
 
       <button
         className='leaderboardBtn'
-        onClick={toggleLeaderboard}
+        onClick={() => toggleDisplay(leaderboardVisible, setLeaderboardVisible)}
       >
         <img src="https://img.icons8.com/ios-glyphs/90/FAB005/trophy.png" alt="trophy" />
       </button>
@@ -223,22 +212,24 @@ export default function App() {
             top: btnPos.top,
             left: btnPos.left,
             backgroundColor: btnColor,
+            width: (startingSize - (clickCount * .2)) + 'px',
+            height: (startingSize - (clickCount * .2)) + 'px',
             display: targetVisible ? 'flex' : 'none',
           }}
         />
       </div>
-
-      {/* <p className='counter'>{clickCount}</p> */}
 
       <button
         className='startBtn'
         onClick={handleStart}
         title='Start'
         style={{
-          backgroundColor: inProgress ? `rgb(${255 - (centiseconds * 4)}, 0, 0)` : 'green',
+          // backgroundColor: inProgress ? `rgb(${255 - (centiseconds * 4)}, 0, 0)` : 'green',
+          background: inProgress ? `rgb(${255 - (centiseconds * 4)}, 0, 0)` : 'linear-gradient(to right, rgb(124, 224, 66), rgb(51, 139, 147))',
           top: inProgress ? '92%' : '50%',
           width: inProgress ? `${centiseconds / 10}vw` : '10vw',
-          left: inProgress ? '48%' : '45%'
+          left: inProgress ? '48%' : '45%',
+          display: !inProgress || centiseconds >= 3 ? 'block' : 'none'
         }}
       >
         {inProgress ? centiseconds >= 10 ? centiseconds.toString().charAt(0) : '' : 'Start'}
@@ -283,17 +274,9 @@ export default function App() {
             id="username"
             className='modalInput'
             placeholder='Username'
+            autoComplete='username'
             onChange={e => setUserCredentials({ ...userCredentials, username: e.target.value })}
           />
-
-          {/* <input
-            type="email"
-            name="email"
-            id="email"
-            className='modalInput'
-            placeholder='Email'
-            onChange={e => setUserCredentials({ ...userCredentials, email: e.target.value })}
-          /> */}
 
           <input
             type="password"
@@ -320,7 +303,7 @@ export default function App() {
         <button
           className='closeModalBtn'
           title='Close'
-          onClick={toggleModal}
+          onClick={() => toggleDisplay(modalVisible, setModalVisible)}
         >
           <img width="20" height="20f" src="https://img.icons8.com/ios-filled/50/FFFFFF/x.png" alt="x" />
         </button>
@@ -335,7 +318,7 @@ export default function App() {
         <button
           className='closeModalBtn'
           title='Close'
-          onClick={toggleLeaderboard}
+          onClick={() => toggleDisplay(leaderboardVisible, setLeaderboardVisible)}
         >
           <img width="20" height="20f" src="https://img.icons8.com/ios-filled/50/FFFFFF/x.png" alt="x" />
         </button>
