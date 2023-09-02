@@ -2,6 +2,12 @@
 
 A simple game that has its own database to store the users' scores.
 
+Built with:
+React <br />
+Firebase <br />
+Vite <br />
+CSS <br />
+
 ![Demo](https://github.com/dlustre/aimtrainerv2/blob/master/aimtrainer.gif)
 
 How to play:
@@ -11,9 +17,3 @@ Enter username and password to save high score. You can find yourself on the lea
 ![Login Example](https://github.com/dlustre/aimtrainerv2/blob/master/login.gif)
 
 ![Leaderboard](https://github.com/dlustre/aimtrainerv2/blob/master/leaderboard.png)
-
-Built with:
-React
-Firebase
-Vite
-CSS
