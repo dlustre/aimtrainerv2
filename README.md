@@ -2,7 +2,7 @@
 
 A simple game that has its own database to store the users' scores.
 
-Built with:
+Built with: <br />
 React <br />
 Firebase <br />
 Vite <br />
