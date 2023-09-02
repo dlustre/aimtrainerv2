@@ -9,4 +9,5 @@ To save your high score, make an account. You can find yourself on the leaderboa
 Tech Used:
 React.js
 Firebase
+Vite
 HTML/CSS
