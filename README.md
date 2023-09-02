@@ -2,12 +2,16 @@
 
 A simple game that has its own database to store the users' scores.
 
-How to play:
-Click the start button and the timer will start: click the target button as many times as you can before the timer reaches zero!
-To save your high score, make an account. You can find yourself on the leaderboard after you login!
+![Demo](https://github.com/dlustre/aimtrainerv2/blob/master/aimtrainer.gif)
 
-Tech Used:
-React.js
+How to play:
+Click the start button and the timer will start: click the target button as many times as you can before the timer reaches zero.
+Enter username and password to save high score. You can find yourself on the leaderboard after you're signed in.
+
+![Login Example](https://github.com/dlustre/aimtrainerv2/blob/master/login.gif)
+
+Built with:
+React
 Firebase
 Vite
-HTML/CSS
+CSS
