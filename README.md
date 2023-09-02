@@ -10,6 +10,8 @@ Enter username and password to save high score. You can find yourself on the lea
 
 ![Login Example](https://github.com/dlustre/aimtrainerv2/blob/master/login.gif)
 
+![Leaderboard](https://github.com/dlustre/aimtrainerv2/blob/master/leaderboard.png)
+
 Built with:
 React
 Firebase
