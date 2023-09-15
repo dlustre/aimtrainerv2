@@ -12,7 +12,6 @@ export default function App() {
 
   const startingSize = 65;
   const [fetchedScore, setFetchedScore] = useState(null);
-  const [isNewUser, setIsNewUser] = useState(false);
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [targetVisible, setTargetVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -21,7 +20,6 @@ export default function App() {
   const [clickCount, setClickCount] = useState(0);
   const [btnColor, setBtnColor] = useState('#FF5733');
   const [userId, setUserId] = useState(null);
-  const [bestScore, setBestScore] = useState(0);
   const { centiseconds, start } = useCountdown(handleEnd);
 
   const startingPos = {
@@ -61,6 +59,19 @@ export default function App() {
       toggleDisplay(targetVisible, setTargetVisible);
       toggleDisplay(modalVisible, setModalVisible);
 
+      if (clickCount > bestSessionScore) {
+        setBestSessionScore(clickCount);
+      }
+
+      if (userId) {
+        if (fetchedScore === null) {
+          fetchBestScore();
+        }
+        if (clickCount > fetchedScore) {
+          updateBestScore(userId, clickCount);
+          setFetchedScore(clickCount);
+        }
+      }
     }
   }
 
@@ -73,12 +84,17 @@ export default function App() {
     if (userExists === false) {
       const accountCreated = await createNewAccount(username, password);
       if (accountCreated !== false) {
-        setIsNewUser(true);
         setUserId(accountCreated);
+        updateBestScore(accountCreated, bestSessionScore);
+        setFetchedScore(bestSessionScore);
       }
     } else {
-      setIsNewUser(false);
       setUserId(userExists);
+      fetchBestScore(userExists);
+      if (bestSessionScore > fetchedScore) {
+        updateBestScore(userExists, bestSessionScore);
+        setFetchedScore(bestSessionScore);
+      }
     }
   }
 
@@ -89,41 +105,15 @@ export default function App() {
     moveButton();
   }
 
-  useEffect(() => {
-    const fetchBestScore = async () => {
-      const fetched = await getBestScore(userId);
-      console.log('end fetch: ' + fetched);
+  const fetchBestScore = async (id = '') => {
+    if (id !== '') {
+      const fetched = await getBestScore(id);
       setFetchedScore(fetched);
-    };
-
-    if (userId && !isNewUser && fetchedScore === null) {
-      console.log('begin fetch')
-      fetchBestScore();
+    } else {
+      const fetched = await getBestScore(userId);
+      setFetchedScore(fetched);
     }
-  }, [isNewUser, userId, fetchedScore]);
-
-  useEffect(() => {
-    if (fetchedScore !== null) {
-      if (fetchedScore >= bestScore) {
-        console.log(`fetched score higher: ${fetchedScore}`)
-        setBestScore(fetchedScore);
-      } else {
-        updateBestScore(userId, bestScore);
-      }
-    }
-  }, [fetchedScore, bestScore, userId]);
-
-  useEffect(() => {
-    if (clickCount > bestSessionScore) {
-      setBestSessionScore(clickCount);
-    }
-  }, [bestSessionScore, clickCount]);
-
-  useEffect(() => {
-    if (bestSessionScore > bestScore) {
-      setBestScore(bestSessionScore);
-    }
-  }, [bestScore, bestSessionScore]);
+  };
 
   function updateCounter() {
     setClickCount((prevCount) => prevCount + 1)
@@ -224,7 +214,6 @@ export default function App() {
         onClick={handleStart}
         title='Start'
         style={{
-          // backgroundColor: inProgress ? `rgb(${255 - (centiseconds * 4)}, 0, 0)` : 'green',
           background: inProgress ? `rgb(${255 - (centiseconds * 4)}, 0, 0)` : 'linear-gradient(to right, rgb(124, 224, 66), rgb(51, 139, 147))',
           top: inProgress ? '92%' : '50%',
           width: inProgress ? `${centiseconds / 10}vw` : '10vw',
@@ -258,7 +247,7 @@ export default function App() {
             {`Highest this Session: ${bestSessionScore}`}
           </span>
           <br />
-          {userId ? `Personal Best: ${bestScore}` : 'Login to record your best score!'}
+          {userId ? `Personal Best: ${fetchedScore !== null ? fetchedScore : 'Fetching...'}` : 'Login to record your best score!'}
         </div>
 
 
@@ -323,7 +312,7 @@ export default function App() {
           <img width="20" height="20f" src="https://img.icons8.com/ios-filled/50/FFFFFF/x.png" alt="x" />
         </button>
 
-        <Leaderboard username={userCredentials.username} />
+        <Leaderboard username={userId ? userCredentials.username : ''} />
       </div>
     </>
   )
