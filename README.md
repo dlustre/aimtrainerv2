@@ -2,7 +2,7 @@
 
 A browser game with a real-time leaderboard.
 
-[Play Game](https://dlustre.github.io/aimtrainerv2/)
+[Play it!](https://dlustre.github.io/aimtrainerv2/)
 
 ## Built with: <br />
 React <br />
