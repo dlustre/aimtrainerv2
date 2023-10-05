@@ -1,12 +1,10 @@
-import { useState, useEffect } from 'react';
-import useCountdown from './useCountdown.jsx'
-import Leaderboard from './Leaderboard.jsx'
 import { checkUserExists, createNewAccount, getBestScore, updateBestScore } from './firebaseUtils.jsx'
+import { useState, useEffect } from 'react';
 import useColorChange from 'use-color-change';
-import logo from './filipinoStar.png'
-
-import './styles.css'
-
+import useCountdown from './useCountdown.jsx';
+import Leaderboard from './Leaderboard.jsx';
+import logo from './filipinoStar.png';
+import './styles.css';
 
 export default function App() {
 
@@ -26,13 +24,13 @@ export default function App() {
     top: '50%',
     left: '48.4%',
   }
+  const [btnPos, setBtnPos] = useState({ ...startingPos });
 
   const colorStyle = useColorChange(clickCount, {
     higher: '#a09dd4',
     duration: 500,
   })
 
-  const [btnPos, setBtnPos] = useState({ ...startingPos });
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     username: '',
@@ -98,7 +96,6 @@ export default function App() {
     }
   }
 
-
   function handleTargetClick() {
     updateCounter();
     start(60);
@@ -145,8 +142,8 @@ export default function App() {
   }
 
   function credentialsValid() {
-    const username = userCredentials.username
-    const password = userCredentials.password
+    const username = userCredentials.username;
+    const password = userCredentials.password;
     return !hasWhiteSpace(username) && !hasWhiteSpace(password) && username !== '' && password !== '';
   }
 
@@ -177,7 +174,7 @@ export default function App() {
       </div>
 
       <div className="homeAnchor" title='More cool stuff!'>
-        <a href="https://github.com/dlustre">
+        <a target="_blank" rel="noreferrer" href="https://dlustre.github.io/react-portfolio/">
           <div className="imageContainer">
             <img className="homeImg" src={logo} alt="Star" />
           </div>
