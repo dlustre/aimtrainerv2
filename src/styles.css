@@ -304,6 +304,12 @@ a {
     color: #a09dd4;
     letter-spacing: 0.13rem;
     font-size: 1.8vmin;
+    text-decoration: underline;
+}
+
+.leaderboardContainer p:hover {
+    cursor: pointer;
+    color: #bbb8f2;
 }
 
 .leaderboardContainer h2 {

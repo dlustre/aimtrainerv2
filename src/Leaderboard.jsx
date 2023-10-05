@@ -5,12 +5,13 @@ import { fetchAllUsers } from './firebaseUtils'; // Adjust the import path
 export default function Leaderboard({ username }) {
     const [leaderboardData, setLeaderboardData] = useState([]);
 
+    // Fetch leaderboard data from Firebase and set it in state
+    const fetchData = async () => {
+        const data = await fetchAllUsers();
+        setLeaderboardData(data);
+    };
+
     useEffect(() => {
-        // Fetch leaderboard data from Firebase and set it in state
-        const fetchData = async () => {
-            const data = await fetchAllUsers();
-            setLeaderboardData(data);
-        };
         fetchData();
     }, []);
 
@@ -22,7 +23,7 @@ export default function Leaderboard({ username }) {
         <div className="leaderboardContainer">
 
             <h2>Leaderboard</h2>
-            <p>Reload to see latest!</p>
+            <p onClick={fetchData}>Refresh Leaderboard</p>
             <div className="leaderboardList">
                 {sortedLeaderboard.map((user, index) => (
                     <div
