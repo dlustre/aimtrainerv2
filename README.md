@@ -2,6 +2,8 @@
 
 A browser game with a real-time leaderboard.
 
+[Play it!](https://dlustre.github.io/aimtrainerv2/)
+
 ## Built with: <br />
 React <br />
 Firebase <br />
