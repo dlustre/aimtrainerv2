@@ -174,7 +174,7 @@ export default function App() {
       </div>
 
       <div className="homeAnchor" title='More cool stuff!'>
-        <a target="_blank" rel="noreferrer" href="https://dlustre.github.io/react-portfolio/">
+        <a target="_blank" rel="noreferrer" href="https://dlustre.github.io">
           <div className="imageContainer">
             <img className="homeImg" src={logo} alt="Star" />
           </div>
